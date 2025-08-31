@@ -33,6 +33,7 @@ services:
       # Internal port
       - "traefik.http.services.bluedjedi-web.loadbalancer.server.port=5000"
 
+
 secrets:
   telegram_bot_token:
     file: /opt/key/telegram_bot_token.txt

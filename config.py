@@ -1,23 +1,28 @@
+#cd /opt/vps/web
+
+# Backup the broken one
+#cp config.py config.py.broken
+
+# Create clean config.py
+#cat > config.py << 'EOF'
 """
 Configuration settings for Flask application
 Separates development and production configurations
 """
-
 import os
+from datetime import timedelta
 
+# Secrets helper function
 def read_secret_file(filepath, fallback=None):
     """Read secret from file with fallback"""
     try:
-        with open(filepath, 'r') as f:
+        with open(filepath, "r") as f:
             return f.read().strip()
     except FileNotFoundError:
         return fallback
 
-from datetime import timedelta
-
 class BaseConfig:
     """Base configuration with common settings"""
-    
     # Basic Flask config
     SECRET_KEY = read_secret_file('/run/secrets/flask_secret_key', 'dev-fallback-only')
     
@@ -47,25 +52,17 @@ class DevelopmentConfig(BaseConfig):
     """Development configuration"""
     DEBUG = True
     TESTING = False
-    
-    # More verbose logging in development
     LOG_LEVEL = 'DEBUG'
 
 class ProductionConfig(BaseConfig):
     """Production configuration"""
     DEBUG = False
     TESTING = False
-    
-    # Less verbose logging in production
     LOG_LEVEL = 'INFO'
-    
-    # Override secret key from environment
-    SECRET_KEY = os.getenv('SECRET_KEY', BaseConfig.SECRET_KEY)
 
 class TestingConfig(BaseConfig):
     """Testing configuration"""
     TESTING = True
     DEBUG = True
-    
-    # Use in-memory database for tests
     WTF_CSRF_ENABLED = False
+#EOF
