@@ -1,19 +1,34 @@
+#cat > /opt/vps/web/Dockerfile << 'EOF'
 FROM python:3.11-slim
 
 WORKDIR /app
+
+# Install system utilities and Node.js
+RUN apt-get update && apt-get install -y \
+    curl \
+    jq \
+    nodejs \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy package files first for better caching
+COPY package*.json ./
+
+# Install Node dependencies
+RUN npm install
 
 # Copy requirements and install Python dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Install waitress for production WSGI server
-RUN pip install waitress
-
 # Copy application files
 COPY . .
+
+# Build Tailwind CSS
+RUN npm run build-css
 
 # Expose port
 EXPOSE 5000
 
-# Run with waitress instead of Flask dev server
-CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "app:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:create_app()"]
+#EOF

@@ -14,10 +14,10 @@ services:
       - .:/app
     environment:
       - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-REPLACE_WITH_SECRET_KEY}
     secrets:
       - telegram_bot_token
       - telegram_user_id
-      - flask_secret_key
     labels:
       # Traefik routing for public site
       - "traefik.enable=true"
@@ -38,5 +38,3 @@ secrets:
     file: /opt/key/telegram_bot_token.txt
   telegram_user_id:
     file: /opt/key/telegram_user_id.txt
-  flask_secret_key:
-    file: /opt/key/flask_secret_key.txt

@@ -4,22 +4,13 @@ Separates development and production configurations
 """
 
 import os
-
-def read_secret_file(filepath, fallback=None):
-    """Read secret from file with fallback"""
-    try:
-        with open(filepath, 'r') as f:
-            return f.read().strip()
-    except FileNotFoundError:
-        return fallback
-
 from datetime import timedelta
 
 class BaseConfig:
     """Base configuration with common settings"""
     
     # Basic Flask config
-    SECRET_KEY = read_secret_file('/run/secrets/flask_secret_key', 'dev-fallback-only')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'REPLACE_WITH_STRONG_SECRET_KEY')
     
     # Session config
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
