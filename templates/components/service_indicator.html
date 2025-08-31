@@ -1,0 +1,17 @@
+<!-- Service Status Indicator Component -->
+<!-- Usage: {% include 'components/service_indicator.html' %} -->
+<!-- Pass variables: service_name, service_id, status -->
+
+<div class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/5 transition-colors duration-200">
+    <span class="service-light {{ status|default('offline') }}" 
+          id="{{ service_id }}-light"
+          aria-label="{{ service_name }} status: {{ status|default('offline') }}"></span>
+    <span class="text-gray-300 text-sm font-medium">
+        {{ service_name }}
+    </span>
+    {% if show_uptime %}
+    <span class="text-gray-500 text-xs ml-auto">
+        {{ uptime|default('--') }}
+    </span>
+    {% endif %}
+</div>

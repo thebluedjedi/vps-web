@@ -1,0 +1,42 @@
+# secrets
+.env
+.env.*
+*.pem
+*.key
+*.crt
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# logs & caches
+*.log
+logs/
+.cache/
+coverage/
+
+# builds & dependencies (enable if you use them)
+node_modules/
+dist/
+build/
+out/
+.next/
+
+# Python (ignore if not using)
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# misc
+*.sqlite
+*.db
+
+# project-specific ignores
+# compiled CSS (keep input.css as source)
+static/css/output.css
+static/css/*.map
+# scratch dumps / exports
+dump/

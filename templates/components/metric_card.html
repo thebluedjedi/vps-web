@@ -1,0 +1,37 @@
+<!-- Metric Card Component -->
+<!-- Usage: {% include 'components/metric_card.html' %} -->
+<!-- Pass variables: title, value, id, show_chart, chart_type -->
+
+<div class="metric-card group">
+    <!-- Card Header -->
+    <div class="flex justify-between items-center mb-3">
+        <h3 class="text-temple-accent text-sm font-semibold uppercase tracking-wider">
+            {{ title }}
+        </h3>
+        <span id="{{ id }}-value" class="text-gray-100 text-2xl font-bold font-mono">
+            {{ value|default('-', true) }}
+        </span>
+    </div>
+    
+    <!-- Chart Container (if needed) -->
+    {% if show_chart %}
+    <div class="relative h-20 mt-2">
+        <canvas id="{{ id }}-chart" class="w-full h-full"></canvas>
+    </div>
+    {% endif %}
+    
+    <!-- Progress Bar (alternative to chart) -->
+    {% if show_progress %}
+    <div class="w-full bg-gray-700/50 rounded-full h-2 mt-3">
+        <div id="{{ id }}-progress" class="bg-gradient-to-r from-temple-accent to-temple-accent-dark h-2 rounded-full transition-all duration-500"
+             style="width: {{ progress_value|default(0) }}%"></div>
+    </div>
+    {% endif %}
+    
+    <!-- Additional Info -->
+    {% if additional_info %}
+    <div class="mt-3 pt-3 border-t border-gray-700/50">
+        <p class="text-xs text-gray-400">{{ additional_info }}</p>
+    </div>
+    {% endif %}
+</div>

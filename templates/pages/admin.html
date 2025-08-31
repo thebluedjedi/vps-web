@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Blue Djedi Admin Dashboard{% endblock %}
+
+{% block fonts %}
+    {{ super() }}
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block styles %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <h1 class="text-2xl font-bold text-temple-accent">
+            System Dashboard
+        </h1>
+        <button onclick="refreshMetrics()" 
+                id="refreshBtn"
+                class="btn-secondary flex items-center gap-2">
+            <svg id="refreshIcon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>Refresh</span>
+        </button>
+    </div>
+    
+    <!-- Quick Links -->
+    <div class="flex flex-wrap gap-2 mb-6">
+        <a href="#" onclick="openTunnel('traefik', 8080)" class="btn-secondary text-xs">
+            <span class="service-light" id="traefik-status"></span>
+            Traefik
+        </a>
+        <a href="#" onclick="openTunnel('grafana', 3000)" class="btn-secondary text-xs">
+            <span class="service-light" id="grafana-status"></span>
+            Grafana
+        </a>
+        <a href="#" onclick="openTunnel('portainer', 9000)" class="btn-secondary text-xs">
+            <span class="service-light" id="portainer-status"></span>
+            Portainer
+        </a>
+        <a href="https://chat.bluedjedi.com" target="_blank" class="btn-secondary text-xs">
+            LibreChat
+        </a>
+        <a href="https://admin.bluedjedi.com/n8n/" target="_blank" class="btn-secondary text-xs">
+            N8N
+        </a>
+    </div>
+    
+    <!-- Metrics Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <!-- System Uptime -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">SYSTEM UPTIME</h3>
+                <span id="uptime-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="text-center py-4">
+                <div class="text-4xl font-bold text-temple-success font-mono" id="uptime-display">-</div>
+            </div>
+        </div>
+        
+        <!-- CPU Usage -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">CPU USAGE</h3>
+                <span id="cpu-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="h-20">
+                <canvas id="cpu-chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Memory Usage -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">MEMORY USAGE</h3>
+                <span id="memory-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="h-20">
+                <canvas id="memory-chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Storage -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">STORAGE</h3>
+                <span id="storage-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="h-20 flex items-center justify-center">
+                <canvas id="storage-chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Network -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">NETWORK</h3>
+                <span id="network-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="h-20">
+                <canvas id="network-chart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Response Time -->
+        <div class="metric-card">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="text-temple-accent text-sm font-semibold">RESPONSE TIME</h3>
+                <span id="response-value" class="text-2xl font-bold font-mono">-</span>
+            </div>
+            <div class="h-20">
+                <canvas id="response-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Service Status -->
+    <div class="glass-card p-4">
+        <h3 class="text-temple-accent text-sm font-semibold mb-4">SERVICE STATUS</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+            {% set services = [
+                {'name': 'Amnezia', 'id': 'amnezia'},
+                {'name': 'Grafana', 'id': 'grafana'},
+                {'name': 'Prometheus', 'id': 'prometheus'},
+                {'name': 'Portainer', 'id': 'portainer'},
+                {'name': 'Telegram', 'id': 'telegram'},
+                {'name': 'LibreChat', 'id': 'librechat'},
+                {'name': 'N8N', 'id': 'n8n'}
+            ] %}
+            
+            {% for service in services %}
+            <div class="flex items-center gap-2">
+                <span class="service-light" id="{{ service.id }}-light"></span>
+                <span class="text-xs text-gray-400">{{ service.name }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+{% endblock %}

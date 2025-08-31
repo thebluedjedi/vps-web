@@ -1,0 +1,41 @@
+version: '3.8'
+
+networks:
+  vps:
+    external: true
+
+services:
+  web:
+    build: .
+    container_name: blue-djedi-web
+    restart: always
+    networks:
+      - vps
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-your_secret_key_here}
+    secrets:
+      - telegram_bot_token
+      - telegram_user_id
+    labels:
+      # Traefik routing for public site
+      - "traefik.enable=true"
+      - "traefik.http.routers.bluedjedi-public.rule=Host(`bluedjedi.com`)"
+      - "traefik.http.routers.bluedjedi-public.entrypoints=websecure"
+      - "traefik.http.routers.bluedjedi-public.tls.certresolver=cloudflare"
+      
+      # Admin site routing
+      - "traefik.http.routers.bluedjedi-admin.rule=Host(`admin.bluedjedi.com`)"
+      - "traefik.http.routers.bluedjedi-admin.entrypoints=websecure"
+      - "traefik.http.routers.bluedjedi-admin.tls.certresolver=cloudflare"
+      
+      # Internal port
+      - "traefik.http.services.bluedjedi-web.loadbalancer.server.port=5000"
+
+secrets:
+  telegram_bot_token:
+    file: ./secrets/telegram_bot_token
+  telegram_user_id:
+    file: ./secrets/telegram_user_id

@@ -1,0 +1,21 @@
+{
+  "name": "blue-djedi-temple",
+  "version": "2.0.0",
+  "description": "Blue Djedi Temple Website",
+  "scripts": {
+    "build-css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --minify",
+    "watch-css": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch",
+    "dev": "npm run watch-css & python app.py",
+    "build": "npm run build-css"
+  },
+  "keywords": ["flask", "tailwindcss", "admin", "dashboard"],
+  "author": "Blue Djedi",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.3.6"
+  }
+}

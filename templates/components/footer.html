@@ -1,0 +1,22 @@
+<!-- Footer Component -->
+<footer class="bg-black/80 backdrop-blur-xl border-t border-temple-accent/30 mt-auto">
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center">
+            <p class="text-gray-400 text-sm">
+                &copy; {{ current_year }} Blue Djedi Temple. All rights reserved.
+            </p>
+            <p class="text-gray-500 text-xs mt-2">
+                You are loved, you are beautiful, and you are more powerful than you know.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Set current year
+    document.addEventListener('DOMContentLoaded', function() {
+        const yearElements = document.querySelectorAll('.current-year');
+        const currentYear = new Date().getFullYear();
+        yearElements.forEach(el => el.textContent = currentYear);
+    });
+</script>

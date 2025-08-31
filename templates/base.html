@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blue Djedi Temple{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <link href="{{ url_for('static', filename='css/output.css') }}" rel="stylesheet">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    {% block fonts %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% endblock %}
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+    
+    <!-- Meta tags -->
+    <meta name="description" content="{% block description %}Temple of the Blue Djedi - You are loved, you are beautiful, and you are more POWERFUL than you know.{% endblock %}">
+    
+    <!-- Page-specific styles -->
+    {% block styles %}{% endblock %}
+</head>
+<body class="bg-gradient-temple text-gray-100 min-h-screen flex flex-col custom-scrollbar">
+    <!-- Skip to main content for accessibility -->
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-temple-accent px-4 py-2 rounded">
+        Skip to main content
+    </a>
+    
+    <!-- Header/Navigation -->
+    {% block navigation %}
+        {% include 'components/navbar.html' %}
+    {% endblock %}
+    
+    <!-- Main Content -->
+    <main id="main" class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    {% block footer %}
+        {% include 'components/footer.html' %}
+    {% endblock %}
+    
+    <!-- Base JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    <!-- Page-specific scripts -->
+    {% block scripts %}{% endblock %}
+</body>
+</html>
