@@ -43,4 +43,4 @@ File Structure
 │   └── system.py     # System information helpers
 ├── config.py         # Flask configuration with secrets integration
 ├── docker-compose.yml # Container orchestration
-└── app.py           # Flask application entry point
+└── app.py           # Flask application entry point# Last updated: Mon Sep  1 10:17:57 AM CEST 2025
