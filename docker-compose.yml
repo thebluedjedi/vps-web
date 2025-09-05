@@ -24,15 +24,8 @@ services:
       - "traefik.http.routers.bluedjedi-public.rule=Host(`bluedjedi.com`)"
       - "traefik.http.routers.bluedjedi-public.entrypoints=websecure"
       - "traefik.http.routers.bluedjedi-public.tls.certresolver=cloudflare"
-      
-      # Admin site routing
-      - "traefik.http.routers.bluedjedi-admin.rule=Host(`admin.bluedjedi.com`)"
-      - "traefik.http.routers.bluedjedi-admin.entrypoints=websecure"
-      - "traefik.http.routers.bluedjedi-admin.tls.certresolver=cloudflare"
-      
-      # Internal port
+      #Internal
       - "traefik.http.services.bluedjedi-web.loadbalancer.server.port=5000"
-
 
 secrets:
   telegram_bot_token:
